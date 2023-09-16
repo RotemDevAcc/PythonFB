@@ -1,0 +1,23 @@
+[
+    {
+        "userid": "12345678",
+        "username": "admin",
+        "password": "admin",
+        "books": [],
+        "isAdmin": true
+    },
+    {
+        "userid": "211262061",
+        "username": "angelone",
+        "password": "yrdy",
+        "books": [],
+        "isAdmin": true
+    },
+    {
+        "userid": "225244386",
+        "username": "angelina",
+        "password": "test",
+        "books": [],
+        "isAdmin": false
+    }
+]

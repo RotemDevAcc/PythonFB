@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Users</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+    <div class="container mt-3">
+        <a href="management.html" class="btn btn-primary btn-sm">Main Management</a>
+    </div>
+    <div class="container mt-5">
+        <h1 class="mb-4">List of Users</h1>
+        <ul class="list-group" id="user-list"></ul>
+    </div>
+
+    <script>
+        // Function to fetch and display the list of users
+        function fetchUsers() {
+            fetch(localIP + 'getusers', {
+                method: 'POST', // Use POST request
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const users = data.data; // Extract the users array from the response
+
+                    const userList = document.getElementById('user-list');
+
+
+                    // Clear any existing list items
+                    userList.innerHTML = '';
+
+                    // Loop through the users and create list items with buttons
+                    let passed = 0
+                    users.forEach(user => {
+
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `Username: ${user.username}, ${user.isadmin == true ? "Admin: Yes" : "Admin: No"}`;
+                        listItem.classList.add('list-group-item'); // Add Bootstrap list-group-item class
+
+                        const button = document.createElement('button');
+                        button.textContent = "Delete";
+                        button.classList.add('btn', 'btn-danger', 'mx-2');
+                        button.addEventListener('click', () => {
+                            DeleteUser(user.userid, user.username);
+                        });
+
+                        const button2 = document.createElement('button');
+                        button2.textContent = "Set Permissions";
+                        button2.classList.add('btn', 'btn-success', 'mx-2');
+                        button2.addEventListener('click', () => {
+                            setPermissions(user.userid, user.username);
+                        });
+
+                        listItem.appendChild(button);
+                        listItem.appendChild(button2);
+
+                        // Create a div for books and title
+                        const booksDiv = document.createElement('div');
+                        booksDiv.classList.add('mt-2', 'pl-3'); // Add Bootstrap classes for spacing and alignment
+
+                        // Create a title for the books
+                        const booksTitle = document.createElement('strong');
+                        booksTitle.textContent = `Books: ${user.books.length != 0 ? "" : "No Books"}`;
+                        booksDiv.appendChild(booksTitle); // Add the title to the books div
+
+                        const booksList = document.createElement('ul'); // Create a nested list for books
+                        booksList.classList.add('list-group', 'mt-2'); // Add Bootstrap classes
+                        const currentDate = new Date();
+                        user.books.forEach(book => {
+                            const returnDate = new Date(book.returndate);
+                            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                            const formattedDate = returnDate.toLocaleDateString(undefined, options);
+
+                            let textContent;
+                            let textColorClass = '';
+
+                            if (returnDate < currentDate) {
+                                passed += 1
+                                textContent = `ID: ${book.id}, Name: ${book.name}, Return Date: ${formattedDate} PASSED`
+                                textColorClass = 'text-danger'; // Apply the 'text-danger' class for red text
+                            } else {
+                                textContent = `ID: ${book.id}, Name: ${book.name}, Return Date: ${formattedDate}`;
+                            }
+
+                            const bookItem = document.createElement('li');
+                            bookItem.innerHTML = `<strong class="${textColorClass}">${textContent}</strong>`;
+                            bookItem.classList.add('list-group-item'); // Add Bootstrap list-group-item class to each book
+                            booksList.appendChild(bookItem); // Add each book to the nested list
+
+                        });
+
+                        booksDiv.appendChild(booksList); // Add the nested books list to the books div
+                        listItem.appendChild(booksDiv); // Add the books div to the user list item
+
+                        userList.appendChild(listItem);
+
+                    });
+                    if(passed > 0){
+                        setTimeout(() => {
+                            Message(`You Have ${passed} Book${passed == 1 ? "" : "s"} that ${passed == 1 ? "wasn't" : "weren't"} returned on time`,'error')
+                        }, 500);
+                    }else{
+                        Message("All Books are present and accounted for","success")
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function setPermissions(userid, username) {
+            fetch(localIP + 'setPermissions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "userid": userid, "username": username }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from your server (e.g., success message)
+                    if (data.success) {
+                        Message(data.message, "success")
+                        setTimeout(() => {
+                            window.location.href = 'users.html';
+                        }, 1000);
+
+                    } else {
+                        Message(data.message, 'error')
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function DeleteUser(userid, username) {
+            fetch(localIP + 'deleteuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "userid": userid, "username": username }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from your server (e.g., success message)
+                    if (data.success) {
+                        Message(data.message, "success")
+                        setTimeout(() => {
+                            window.location.href = 'users.html';
+                        }, 1000);
+
+                    } else {
+                        Message(data.message, 'error')
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Call the fetchUsers function when the page loads
+        //window.onload = fetchUsers;
+        document.addEventListener('DOMContentLoaded', function () {
+            // Your code here
+            setTimeout(() => {
+                fetchUsers(); // Call your function when the DOM is ready
+            }, 500);
+            
+        });
+    </script>
+
+
+    <!-- Add Bootstrap JS and jQuery links here (if needed) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $("#navbar-placeholder").load("navbar.html");
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

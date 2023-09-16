@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Display</title>
+    <title>iLibrary - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
-    <div id="json-output"></div>
+    <div id="navbar-placeholder"></div>
+
+    <div class="container mt-5">
+        <h1>Welcome to iLibrary</h1>
+        <p>
+            At iLibrary, we're dedicated to providing you with a world of knowledge at your fingertips. Whether you're an avid reader,
+            a student, or simply someone who enjoys the world of books, our library has something for everyone.
+        </p>
+        <p>
+            Explore our vast collection of books, from classics to contemporary bestsellers. Our dedicated team of librarians is here
+            to assist you in finding the perfect book for your interests. Don't hesitate to reach out to us for recommendations or
+            assistance with your research needs.
+        </p>
+        <p>
+            We also offer a range of exciting events and programs, including author talks, book clubs, and workshops. Stay connected with
+            us through our website and social media to stay updated on upcoming events and library news.
+        </p>
+    </div>
 </body>
 <script src="script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function() {
+        $("#navbar-placeholder").load("navbar.html");
+    });
+</script>
 </html>

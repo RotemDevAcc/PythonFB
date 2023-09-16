@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iLibrary - Books</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Custom styles for the book list */
+        .book-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card img {
+            max-width: 150px;
+            max-height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="container mt-5">
+        <h2>Books</h2>
+        <div id="books-list"></div>
+    </div>
+</body>
+<script src="script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $("#navbar-placeholder").load("navbar.html");
+
+        $.get(localIP + "getbooks", function (books) {
+            // Success callback
+            displayBooks(books);
+        }).fail(function () {
+            // Error callback
+            var booksList = $("#books-list");
+            booksList.append("<h3>Books Couldn't Be Retrived, Try Again Later</h3>");
+        });
+    });
+
+    function displayBooks(books) {
+        var booksList = $("#books-list");
+        if (books.length === 0) {
+            booksList.append("<p>No books available.</p>");
+        } else {
+            books.forEach(function (book, index) {
+                var bookCard = $('<div class="book-card"></div>');
+                var img = $('<img src="' + book.image + '" alt="' + book.name + '">');
+                var title = $("<h3>" + book.name + "</h3>");
+                var releaseDate = $("<p>Release Date: " + book.release + "</p>");
+                var copies = $(`<p>Copies Available:  ${book.copies == 0 ? '<span style="color:rgb(223, 27, 27);">None</span>' : book.copies}  </p>`);
+                // Add radio buttons for borrowing options
+                var radioContainer = $('<div class="radio-container"></div>');
+                var oneDayRadioContainer = $('<div class="radio-option"></div>');
+                var oneDayRadio = $('<label class="btn btn-secondary"><input type="radio" name="borrowOption_' + index + '" value="day">1 Day</label>');
+                oneDayRadioContainer.append(oneDayRadio);
+
+                var oneWeekRadioContainer = $('<div class="radio-option"></div>');
+                var oneWeekRadio = $('<label class="btn btn-secondary"><input type="radio" name="borrowOption_' + index + '" value="week">1 Week</label>');
+                oneWeekRadioContainer.append(oneWeekRadio);
+
+                var oneMonthRadioContainer = $('<div class="radio-option"></div>');
+                var oneMonthRadio = $('<label class="btn btn-secondary"><input type="radio" name="borrowOption_' + index + '" value="month">1 Month</label>');
+                oneMonthRadioContainer.append(oneMonthRadio);
+                
+                radioContainer.append(oneDayRadioContainer);
+                radioContainer.append(oneWeekRadioContainer);
+                radioContainer.append(oneMonthRadioContainer);
+
+                // Add a "Borrow" button
+                var borrowButton = $('<button class="btn btn-primary">Borrow</button>');
+                borrowButton.click(function () {
+                    borrowBook(book.id, book.name, $("input[name='borrowOption_" + index + "']:checked").val()); // Pass selected option to borrowBook
+                });
+
+                bookCard.append(img);
+                bookCard.append(title);
+                bookCard.append(releaseDate);
+                bookCard.append(copies);
+                if(hasBook(book.id)){
+                    var borrowButton = null 
+                    borrowButton = $('<button class="btn btn-success">Return Book</button>');
+                    borrowButton.click(function () {
+                        returnBook(book)
+                        //Message("You Already have this book, return it first.",'error')
+                    });
+                    bookCard.append(borrowButton);
+                }
+                else{
+                    if (book.copies > 0) {
+                        bookCard.append(radioContainer); // Add the radio buttons
+                        bookCard.append(borrowButton);
+                    }
+                }
+
+                booksList.append(bookCard);
+            });
+        }
+    }
+
+    function returnBook(book){
+        fetch(localIP + 'returnbook', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: userName,
+                id: book.id,
+                name: book.name,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.success) {
+                    ModifyBooks(data.books)
+                    Message(data.message, "success")
+                    setTimeout(() => {
+                        Message(`Book '${book.name}' Returned`, 'success');
+                    }, 1500);
+
+
+                } else {
+                    if(data.reloadbooks) ModifyBooks(data.reloadbooks)
+                    Message(data.message, 'error')
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function borrowBook(bookid, bookName, borrowOption) {
+        if (!bookid || !bookName) return Message("Book Not Found, Try Again.")
+        if (!borrowOption) {
+            Message("Please select a borrowing length.", "error");
+            return;
+        }
+        var returnDate = new Date();
+        if (borrowOption === "day") {
+            returnDate.setDate(returnDate.getDate() + 1);
+        } else if (borrowOption === "week") {
+            returnDate.setDate(returnDate.getDate() + 7);
+        } else if (borrowOption === "month") {
+            returnDate.setMonth(returnDate.getMonth() + 1);
+        }
+
+        fetch(localIP + 'borrow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: userName,
+                id: bookid,
+                name: bookName,
+                option: borrowOption,
+                returnDate: returnDate.toISOString(), // Send the return date as an ISO string
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from your server (e.g., success message)
+                if (data.success) {
+                    ModifyBooks(data.books)
+                    Message(data.message, "success")
+                    setTimeout(() => {
+
+                        Message(`Book '${bookName}' borrowed for ${borrowOption}. Return by: ${returnDate.toDateString()}`, 'info');
+                    }, 1500);
+
+
+                } else {
+                    Message(data.message, 'error')
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+
+    }
+
+
+</script>
+
+</html>

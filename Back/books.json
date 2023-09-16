@@ -1,0 +1,60 @@
+[
+    {
+        "id": 1,
+        "name": "1984",
+        "author": "George Orwell",
+        "release": "2018",
+        "image": "images/1984.jpeg",
+        "status": true,
+        "return_date": null,
+        "copies": 5
+    },
+    {
+        "id": 2,
+        "name": "A Brief History of Time",
+        "author": "Stephen Hawking",
+        "release": "2018",
+        "image": "images/brief.jpeg",
+        "status": true,
+        "return_date": null,
+        "copies": 5
+    },
+    {
+        "id": 3,
+        "name": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "release": "2018",
+        "image": "images/gatsby.jpeg",
+        "status": true,
+        "return_date": null,
+        "copies": 5
+    },
+    {
+        "id": 4,
+        "name": "Harry Potter and the Sorcerer's Stone",
+        "author": "J.K. Rowling",
+        "release": "2018",
+        "image": "images/harry.jpeg",
+        "status": true,
+        "return_date": null,
+        "copies": 5
+    },
+    {
+        "id": 5,
+        "name": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "release": "2018",
+        "image": "images/tokillmocking.jpeg",
+        "status": true,
+        "return_date": null,
+        "copies": 5
+    },
+    {
+        "id": 6,
+        "name": "Test",
+        "author": "Netanyahu",
+        "release": "2000-10-08",
+        "image": "images/harry.jpeg",
+        "copies": 1
+    }
+]
