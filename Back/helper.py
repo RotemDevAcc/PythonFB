@@ -28,6 +28,8 @@ def save_table_to_file(filename, table):
     with open(filename, "w") as json_file:
         json.dump(table, json_file, indent=4)
 
+
+
 def FindBook(table,param,way):
     books = table
     for book in books:

@@ -4,19 +4,15 @@
         "name": "1984",
         "author": "George Orwell",
         "release": "2018",
-        "image": "images/1984.jpeg",
-        "status": true,
-        "return_date": null,
-        "copies": 5
+        "image": "1984.jpeg",
+        "copies": 4
     },
     {
         "id": 2,
         "name": "A Brief History of Time",
         "author": "Stephen Hawking",
         "release": "2018",
-        "image": "images/brief.jpeg",
-        "status": true,
-        "return_date": null,
+        "image": "brief.jpeg",
         "copies": 5
     },
     {
@@ -24,9 +20,7 @@
         "name": "The Great Gatsby",
         "author": "F. Scott Fitzgerald",
         "release": "2018",
-        "image": "images/gatsby.jpeg",
-        "status": true,
-        "return_date": null,
+        "image": "gatsby.jpeg",
         "copies": 5
     },
     {
@@ -34,9 +28,7 @@
         "name": "Harry Potter and the Sorcerer's Stone",
         "author": "J.K. Rowling",
         "release": "2018",
-        "image": "images/harry.jpeg",
-        "status": true,
-        "return_date": null,
+        "image": "harry.jpeg",
         "copies": 5
     },
     {
@@ -44,17 +36,15 @@
         "name": "To Kill a Mockingbird",
         "author": "Harper Lee",
         "release": "2018",
-        "image": "images/tokillmocking.jpeg",
-        "status": true,
-        "return_date": null,
+        "image": "tokillmocking.jpeg",
         "copies": 5
     },
     {
         "id": 6,
-        "name": "Test",
-        "author": "Netanyahu",
+        "name": "Harry Potter",
+        "author": "asdf",
         "release": "2000-10-08",
-        "image": "images/harry.jpeg",
-        "copies": 1
+        "image": "Harry_Potter.jpeg",
+        "copies": 11
     }
 ]

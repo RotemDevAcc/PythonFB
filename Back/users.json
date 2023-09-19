@@ -7,17 +7,23 @@
         "isAdmin": true
     },
     {
-        "userid": "211262061",
-        "username": "angelone",
-        "password": "yrdy",
+        "userid": "123456789",
+        "username": "test",
+        "password": "admin",
         "books": [],
         "isAdmin": true
     },
     {
-        "userid": "225244386",
-        "username": "angelina",
-        "password": "test",
-        "books": [],
+        "userid": "373117108",
+        "username": "rotem",
+        "password": "123",
+        "books": [
+            {
+                "id": 1,
+                "name": "1984",
+                "returndate": "2023-09-26T13:04:07.491Z"
+            }
+        ],
         "isAdmin": false
     }
 ]
