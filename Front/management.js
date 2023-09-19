@@ -5,33 +5,38 @@ document.getElementById('add-book-form').addEventListener('submit', function (e)
     const releaseDate = document.getElementById('releaseDate').value;
     const copies = document.getElementById('copies').value;
     const author = document.getElementById('author').value;
+    const imageInput = document.getElementById('image');
+    
+    // Create a FormData object to send the form data, including the image
+    const formData = new FormData();
+    formData.append('name', bookName);
+    formData.append('release', releaseDate);
+    formData.append('copies', copies);
+    formData.append('author', author);
 
-    // Create a JavaScript object with the book data
-    const newBook = {
-        name: bookName,
-        release: releaseDate,
-        copies: copies,
-        author: author
-    };
+    const fileSizeInBytes = imageInput.files[0].size;
+    const maxFileSize = 2 * 1024 * 1024
 
-    // Send the new book data to your Flask server using fetch or Ajax
-    // Example fetch:
+    if (fileSizeInBytes > maxFileSize) {
+        Message("File size exceeds the maximum allowed limit (2MB).","error");
+        return;
+    }
+    formData.append('image', imageInput.files[0]); // Add the image file
+
+    // Send the new book data to your Flask server using fetch with the PUT method
     fetch(localIP + '/addbook', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newBook),
+        method: 'PUT',
+        body: formData, // Use the FormData object
     })
         .then(response => response.json())
         .then(data => {
             // Handle the response from your server (e.g., success message)
             if (data.success) {
-                Message(data.message, "success")
+                Message(data.message, "success");
                 // Optionally, you can clear the form fields after successful submission
                 document.getElementById('add-book-form').reset();
             } else {
-                Message(data.message, 'error')
+                Message(data.message, 'error');
             }
         })
         .catch(error => {
@@ -49,7 +54,7 @@ $(document).ready(function () {
 });
 
 function resetBooksDisplay(){
-    $.get(localIP+ "getbooks", function (books) {
+    $.get(localIP+ "books", function (books) {
         booksData = books;
         displayBooks(booksData, ""); // Display all books initially
     });
@@ -78,7 +83,7 @@ function displayBooks(books, query) {
 
             const image = $("<img>");
             image.addClass("card-img-top");
-            image.attr("src", book.image);
+            image.attr("src", "images/" + book.image);
 
             const cardBody = $("<div>");
             cardBody.addClass("card-body");
@@ -98,7 +103,7 @@ function displayBooks(books, query) {
             removeButton.click(function () {
                 removeButton.prop("disabled", true);
                 fetch(localIP + 'removebook', {
-                    method: 'POST',
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },

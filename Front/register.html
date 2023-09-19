@@ -47,8 +47,8 @@
                 return Message("Passwords are not equal",'error')
             }
 
-            fetch(localIP + 'register', {
-                method: 'POST',
+            fetch(localIP + 'accounts', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },

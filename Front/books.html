@@ -40,7 +40,13 @@
     $(function () {
         $("#navbar-placeholder").load("navbar.html");
 
-        $.get(localIP + "getbooks", function (books) {
+        if(!userName || userName == ""){
+            var booksList = $("#books-list");
+            booksList.append("<h3>You Must Login Before You can view the books section</h3>");
+            return
+        }
+
+        $.get(localIP + "books", function (books) {
             // Success callback
             displayBooks(books);
         }).fail(function () {
@@ -57,7 +63,7 @@
         } else {
             books.forEach(function (book, index) {
                 var bookCard = $('<div class="book-card"></div>');
-                var img = $('<img src="' + book.image + '" alt="' + book.name + '">');
+                var img = $('<img src="images/' + book.image + '" alt="' + book.name + '">');
                 var title = $("<h3>" + book.name + "</h3>");
                 var releaseDate = $("<p>Release Date: " + book.release + "</p>");
                 var copies = $(`<p>Copies Available:  ${book.copies == 0 ? '<span style="color:rgb(223, 27, 27);">None</span>' : book.copies}  </p>`);
@@ -111,7 +117,7 @@
     }
 
     function returnBook(book){
-        fetch(localIP + 'returnbook', {
+        fetch(localIP + 'books/returnbook', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -158,7 +164,7 @@
             returnDate.setMonth(returnDate.getMonth() + 1);
         }
 
-        fetch(localIP + 'borrow', {
+        fetch(localIP + 'books/borrow', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

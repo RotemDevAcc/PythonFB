@@ -22,8 +22,8 @@
     <script>
         // Function to fetch and display the list of users
         function fetchUsers() {
-            fetch(localIP + 'getusers', {
-                method: 'POST', // Use POST request
+            fetch(localIP + 'usersapi', {
+                method: 'GET',
             })
                 .then(response => response.json())
                 .then(data => {
@@ -38,7 +38,6 @@
                     // Loop through the users and create list items with buttons
                     let passed = 0
                     users.forEach(user => {
-
                         const listItem = document.createElement('li');
                         listItem.textContent = `Username: ${user.username}, ${user.isadmin == true ? "Admin: Yes" : "Admin: No"}`;
                         listItem.classList.add('list-group-item'); // Add Bootstrap list-group-item class
@@ -56,6 +55,12 @@
                         button2.addEventListener('click', () => {
                             setPermissions(user.userid, user.username);
                         });
+
+                        if(user.username == userName){
+                            listItem.textContent = `(YOU) Username: ${user.username}, ${user.isadmin == true ? "Admin: Yes" : "Admin: No"}`;
+                            button.disabled = true;
+                            button2.disabled = true;
+                        }
 
                         listItem.appendChild(button);
                         listItem.appendChild(button2);
@@ -115,7 +120,7 @@
         }
 
         function setPermissions(userid, username) {
-            fetch(localIP + 'setPermissions', {
+            fetch(localIP + 'usersapi/setPermissions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,8 +146,8 @@
         }
 
         function DeleteUser(userid, username) {
-            fetch(localIP + 'deleteuser', {
-                method: 'POST',
+            fetch(localIP + 'usersapi', {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
