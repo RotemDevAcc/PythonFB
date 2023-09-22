@@ -46,5 +46,13 @@
         "release": "2000-10-08",
         "image": "Harry_Potter.jpeg",
         "copies": 11
+    },
+    {
+        "id": 7,
+        "name": "test",
+        "author": "fsad",
+        "release": "2000-10-01",
+        "image": "test.jpeg",
+        "copies": 1
     }
 ]
