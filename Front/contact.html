@@ -1,27 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iLibrary - About</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="navbar-placeholder"></div>
     <div class="container">
         <h2>Contact Us</h2>
         <p>If you have any questions or inquiries, please don't hesitate to contact us. We're here to assist you!</p>
-        
+
         <div class="row">
             <div class="col-md-6">
                 <h3>Contact Information</h3>
                 <p><strong>Address:</strong> 123 iLibrary Street, Mobile City</p>
                 <p><strong>Phone:</strong> +1 (555) 123-4567</p>
                 <p><strong>Email:</strong> info@ilibrary.com</p>
+                <p><img src="images/logo.jpeg" height = "50px" width = "50px"></p>
             </div>
             <div class="col-md-6">
                 <h3>Contact Form</h3>
-                <form>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </form>
+                <div id="messagebox" class="text-center mt-3"></div>
+                <!-- <form>
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" class="form-control" id="name" name="name" required>
@@ -35,7 +55,7 @@
                         <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                </form> -->
             </div>
         </div>
     </div>
@@ -43,8 +63,60 @@
 <script src="script.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(function() {
+    let lastpress = false;
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevents the form from acting as it would normally ( sending an http request with all the arguments)
+        if (lastpress) {
+            Message("Please Wait before each click", "error")
+            return
+        }
+        lastpress = true
+        setTimeout(() => {
+            lastpress = false
+        }, 1000);
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        if (!name || !email || !message) {
+            document.getElementById('messagebox').classList.add('error');
+            document.getElementById('messagebox').textContent = 'You must enter a name, email and a message';
+            return
+        }
+
+        fetch(localIP + 'contacts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, message }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('messagebox').classList.remove('error');
+                    document.getElementById('messagebox').classList.add('success');
+                    document.getElementById('messagebox').textContent = data.message || 'Your Feedback was sent successfully';
+                    document.getElementById('name').value = ""
+                    document.getElementById('email').value = ""
+                    document.getElementById('message').value = ""
+                    //window.location.href = 'index.html';
+                } else {
+                    document.getElementById('messagebox').classList.remove('success');
+                    document.getElementById('messagebox').classList.add('error');
+                    document.getElementById('messagebox').textContent = data.message || 'Your feedback was not sent, try again later.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('messagebox').classList.remove('success');
+                document.getElementById('messagebox').classList.add('error');
+                document.getElementById('messagebox').textContent = 'Your feedback was not sent, try again later.';
+            });
+    });
+    $(function () {
         $("#navbar-placeholder").load("navbar.html");
     });
 </script>
+
 </html>

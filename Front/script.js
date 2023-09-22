@@ -72,7 +72,6 @@ function autologin(){
 
 function ModifyBooks(books){
     userBooks = books
-    console.table(books)
 
     var userData = {
         "username": userName,

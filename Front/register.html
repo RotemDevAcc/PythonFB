@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iLibrary - Register</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="navbar-placeholder"></div>
     <div class="container">
@@ -26,25 +29,33 @@
             <button type="submit" class="btn btn-primary btn-block">Register</button>
             <p class="mt-3 text-center">Already have an account? <a href="login.html">Login</a></p>
         </form>
-        <div id="message" class="text-center mt-3"></div>
+        <div id="messagebox" class="text-center mt-3"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(function() {
+        $(function () {
             $("#navbar-placeholder").load("navbar.html");
         });
     </script>
     <script src="script.js"></script>
     <script>
+        let lastpress = false;
         document.getElementById('register-form').addEventListener('submit', function (e) {
             e.preventDefault();
-
+            if (lastpress) {
+                Message("Please Wait before each click", "error")
+                return
+            }
+            lastpress = true
+            setTimeout(() => {
+                lastpress = false
+            }, 1000);
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const confirm_password = document.getElementById('confirm_password').value;
 
-            if(password != confirm_password){
-                return Message("Passwords are not equal",'error')
+            if (password != confirm_password) {
+                return Message("Passwords are not equal", 'error')
             }
 
             fetch(localIP + 'accounts', {
@@ -57,17 +68,21 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('message').textContent = 'Register successful! Welcome';
+                        document.getElementById('messagebox').textContent = 'Register successful! Welcome';
                         window.location.href = 'login.html';
                     } else {
-                        document.getElementById('message').textContent = data.message;
-                        Message(data.message,'error')
+                        document.getElementById('messagebox').textContent = data.message;
+                        Message(data.message, 'error')
                     }
                 })
                 .catch(error => {
+                    document.getElementById('messagebox').classList.remove('success');
+                    document.getElementById('messagebox').classList.add('error');
+                    document.getElementById('messagebox').textContent = 'Register Request Failed, Try Again Later.';
                     console.error('Error:', error);
                 });
         });
     </script>
 </body>
+
 </html>

@@ -48,9 +48,14 @@ document.getElementById('add-book-form').addEventListener('submit', function (e)
 // Remove Book
 let booksData = [];
 
-// Fetch existing books and display them
-$(document).ready(function () {
-    resetBooksDisplay()
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Your code here
+    setTimeout(() => {
+        resetBooksDisplay(); // Call your function when the DOM is ready
+    }, 500);
+
 });
 
 function resetBooksDisplay(){

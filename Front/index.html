@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,25 +14,55 @@
     <div class="container mt-5">
         <h1>Welcome to iLibrary</h1>
         <p>
-            At iLibrary, we're dedicated to providing you with a world of knowledge at your fingertips. Whether you're an avid reader,
+            At iLibrary, we're dedicated to providing you with a world of knowledge at your fingertips. Whether you're
+            an avid reader,
             a student, or simply someone who enjoys the world of books, our library has something for everyone.
         </p>
         <p>
-            Explore our vast collection of books, from classics to contemporary bestsellers. Our dedicated team of librarians is here
-            to assist you in finding the perfect book for your interests. Don't hesitate to reach out to us for recommendations or
+            Explore our vast collection of books, from classics to contemporary bestsellers. Our dedicated team of
+            librarians is here
+            to assist you in finding the perfect book for your interests. Don't hesitate to reach out to us for
+            recommendations or
             assistance with your research needs.
         </p>
         <p>
-            We also offer a range of exciting events and programs, including author talks, book clubs, and workshops. Stay connected with
+            We also offer a range of exciting events and programs, including author talks, book clubs, and workshops.
+            Stay connected with
             us through our website and social media to stay updated on upcoming events and library news.
         </p>
+    </div>
+
+    <div class="container mt-5">
+        <ul id="optionlist" class="list-group" style="margin-bottom: 100px;">
+            <li class="list-group-item">1. <a href="contact.html"><button class="btn btn-primary">Contact
+                        Us</button></a></li>
+            <li class="list-group-item">2. <a href="books.html"><button class="btn btn-primary">Borrow A
+                        Book</button></a></li>
+            <li id = "registeropt" class="list-group-item">3. <a href="register.html"><button class="btn btn-primary">Register</button></a>
+            </li>
+            <li id="loginopt" class="list-group-item">4. <a href="login.html"><button class="btn btn-primary">Login</button></a></li>
+            <li id="managementopt" class="list-group-item" style="visibility: hidden;">5. <a
+                    href="management.html"><button class="btn btn-primary">Management</button></a></li>
+        </ul>
     </div>
 </body>
 <script src="script.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(function() {
+    $(function () {
         $("#navbar-placeholder").load("navbar.html");
     });
+    if (isAdmin) {
+        managementopt.style.visibility = "visible"
+        
+    }
+    if (userName){
+        document.getElementById("loginopt").querySelector("button").disabled = true;
+        document.getElementById("registeropt").querySelector("button").disabled = true;
+    }else{
+        document.getElementById("loginopt").querySelector("button").disabled = false;
+        document.getElementById("registeropt").querySelector("button").disabled = false;
+    }
 </script>
+
 </html>

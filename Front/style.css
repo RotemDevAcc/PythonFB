@@ -1,6 +1,6 @@
 
 /* Custom CSS for the "message" div */
-#message {
+#messagebox {
     padding: 10px;
     margin-top: 20px;
     border-radius: 5px;
@@ -8,13 +8,13 @@
 }
 
 /* Custom CSS for success message */
-#message.success {
+#messagebox.success {
     background-color: #4CAF50; /* Green background color */
     color: white; /* White text color */
 }
 
 /* Custom CSS for error message */
-#message.error {
+#messagebox.error {
     background-color: #f44336; /* Red background color */
     color: white; /* White text color */
 }

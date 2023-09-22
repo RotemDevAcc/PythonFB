@@ -26,15 +26,23 @@
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
                 <p class="mt-3 text-center">Don't have an account? <a href="register.html">Create New Account</a></p>
             </form>
-            <div id="message" class="text-center mt-3"></div>
+            <div id="messagebox" class="text-center mt-3"></div>
         </div>
     </div>
-    
+
     <script src="script.js"></script>
     <script>
+        let lastpress = false
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
-
+            if (lastpress) {
+                Message("Please Wait before each click", "error")
+                return
+            }
+            lastpress = true
+            setTimeout(() => {
+                lastpress = false
+            }, 1000);
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
@@ -48,26 +56,29 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('message').classList.remove('error');
-                        document.getElementById('message').classList.add('success');
-                        document.getElementById('message').textContent = 'Login successful! Welcome, ' + username;
-    
+                        document.getElementById('messagebox').classList.remove('error');
+                        document.getElementById('messagebox').classList.add('success');
+                        document.getElementById('messagebox').textContent = 'Login successful! Welcome, ' + username;
+
                         UserLoggedin(data.user)
                         window.location.href = 'index.html';
                     } else {
-                        document.getElementById('message').classList.remove('success');
-                        document.getElementById('message').classList.add('error');
-                        document.getElementById('message').textContent = 'Login failed. Username or Password are wrong.';
+                        document.getElementById('messagebox').classList.remove('success');
+                        document.getElementById('messagebox').classList.add('error');
+                        document.getElementById('messagebox').textContent = 'Login failed. Username or Password are wrong.';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    document.getElementById('messagebox').classList.remove('success');
+                    document.getElementById('messagebox').classList.add('error');
+                    document.getElementById('messagebox').textContent = 'Login Request Failed, Try Again Later.';
                 });
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(function() {
+        $(function () {
             $("#navbar-placeholder").load("navbar.html");
         });
     </script>

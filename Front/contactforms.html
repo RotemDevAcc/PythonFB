@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Users</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+    <div class="container mt-3">
+        <a href="management.html" class="btn btn-primary btn-sm">Main Management</a>
+        <a href="users.html" class="btn btn-primary btn-sm">Users Management</a>
+    </div>
+    <div class="container mt-5">
+        <h1 class="mb-4">List of Contact Forms</h1>
+        <ul class="list-group" id="contact-list"></ul>
+    </div>
+
+    <script>
+        // Function to fetch and display the list of users
+        function fetchContacts() {
+            fetch(localIP + 'contacts', {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const contacts = data;
+
+                    const contactList = document.getElementById('contact-list');
+
+                    contactList.innerHTML = ''; // Clear any existing list items
+
+                    if(!contacts || contacts.length == 0){
+                        contactList.append("No Contact Forms atm.");
+                    }
+
+                    contacts.forEach(contact => {
+                        if (!contact || !contact.name || !contact.email || !contact.message) {
+                            console.log("Skipping invalid contact");
+                            return;
+                        }
+
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('list-group-item');
+
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+
+                        const cardBody = document.createElement('div');
+                        cardBody.classList.add('card-body');
+
+                        const cardTitle = document.createElement('h5');
+                        cardTitle.classList.add('card-title');
+                        cardTitle.textContent = `Contact Name: ${contact.name}, Email: ${contact.email}`;
+
+                        const cardText = document.createElement('p');
+                        cardText.classList.add('card-text');
+                        cardText.textContent = `Message: ${contact.message}`;
+
+                        cardBody.appendChild(cardTitle);
+                        cardBody.appendChild(cardText);
+                        card.appendChild(cardBody);
+                        listItem.appendChild(card);
+
+                        contactList.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const contactList = document.getElementById('contact-list');
+                    contactList.append("Contact Forms Couldn't Be Retrived, Try Again Later.");
+                });
+        }
+
+
+
+
+
+        // Call the fetchContacts function when the page loads
+        //window.onload = fetchContacts;
+        document.addEventListener('DOMContentLoaded', function () {
+            // Your code here
+            setTimeout(() => {
+                fetchContacts(); // Call your function when the DOM is ready
+            }, 500);
+
+        });
+    </script>
+
+
+    <!-- Add Bootstrap JS and jQuery links here (if needed) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $("#navbar-placeholder").load("navbar.html");
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
