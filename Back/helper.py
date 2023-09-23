@@ -6,11 +6,11 @@ from flask import Flask,request,jsonify
 from flask_cors import CORS
 
 from werkzeug.utils import secure_filename
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text # All used in app.py
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+import os # Used in App.py
 
 USELOGGING = False # Keep this as False if you are using HTML Live Server
 
