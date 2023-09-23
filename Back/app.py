@@ -55,7 +55,6 @@ images_directory = os.path.join(root_directory, "Front", "images")
 app.config['UPLOAD_FOLDER'] = images_directory
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2 MB limit
 
-#app.secret_key = 'your_secret_key_here'
 
 Session = sessionmaker(bind=engine)
 
@@ -95,13 +94,6 @@ def init_default_books():
     finally:
         # Always close the session after use, even in case of exceptions
         session.close()
-# books = [
-#     {"id": 1, "name": "1984", "author": "George Orwell", "release": "2018", "image": "1984.jpeg", "copies": 5},
-#     {"id": 2, "name": "A Brief History of Time", "author": "Stephen Hawking", "release": "2018", "image": "brief.jpeg", "copies": 5},
-#     {"id": 3, "name": "The Great Gatsby", "author": "F. Scott Fitzgerald", "release": "2018", "image": "gatsby.jpeg", "copies": 5},
-#     {"id": 4, "name": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "release": "2018", "image": "harry.jpeg", "copies": 5},
-#     {"id": 5, "name": "To Kill a Mockingbird", "author": "Harper Lee", "release": "2018", "image": "tokillmocking.jpeg", "copies": 5},
-# ]
 
 # Returns all books to the client
 @app.route("/books", methods=["GET"])
@@ -119,9 +111,6 @@ def getbooks():
         # Close the session afterwards
         session.close() 
     
-
-    #return books # Get All Books
-
 
 
 # Borrows a Book By its ID
@@ -629,12 +618,6 @@ def iscontactmailused(email):
 #End contact forms
 
 if __name__ == "__main__":
-    # if(not FORCESAVE):
-    #     #books = load_json(BOOKSFILE)
-    #     pass
-    # else:
-    #     pass
-    #users = load_json(USERSFILE)
     if USEDEFAULTS:
         init_default_books()
     app.run(debug=True, port=911)
