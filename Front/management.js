@@ -51,14 +51,15 @@ let booksData = [];
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Your code here
+    // Wait For The Page To Load To Avoid Errors
     setTimeout(() => {
-        resetBooksDisplay(); // Call your function when the DOM is ready
+        resetBooksDisplay(); // Displays All The Books After Half a Second.
     }, 500);
 
 });
 
 function resetBooksDisplay(){
+    // Request All Books From the server
     $.get(localIP+ "books", function (books) {
         booksData = books;
         displayBooks(booksData, ""); // Display all books initially
@@ -79,65 +80,48 @@ function displayBooks(books, query) {
     else if (filteredBooks.length === 0) {
         bookList.append("<p>No matching books found.</p>");
     } else {
-        filteredBooks.forEach(function (book) {
-            const card = $("<div>");
-            card.addClass("col-lg-3 col-md-4 col-sm-6 mb-4");
-
-            const cardContent = $("<div>");
-            cardContent.addClass("card h-100");
-
-            const image = $("<img>");
-            image.addClass("card-img-top");
-            image.attr("src", "images/" + book.image);
-
-            const cardBody = $("<div>");
-            cardBody.addClass("card-body");
-
-            const title = $("<h5>");
-            title.addClass("card-title");
-            title.text("ID: " + book.id + " - " + book.name);
-
-            const author = $("<p>");
-            author.addClass("card-text");
-            author.text("Author: " + book.author + "\nCopies: " + book.copies);
-
-            const removeButton = $("<button>");
-            removeButton.text("Remove");
-            removeButton.addClass("btn btn-danger");
+        const bookCards = filteredBooks.map((book) => {
+            const card = $("<div>").addClass("col-lg-3 col-md-4 col-sm-6 mb-4");
+            const cardContent = $("<div>").addClass("card h-100");
+            const image = $("<img>").addClass("card-img-top").attr("src", "images/" + book.image);
+            const cardBody = $("<div>").addClass("card-body");
+            const title = $("<h5>").addClass("card-title").text("ID: " + book.id + " - " + book.name);
+            const author = $("<p>").addClass("card-text").text("Author: " + book.author + "\nCopies: " + book.copies);
             
-            removeButton.click(function () {
-                removeButton.prop("disabled", true);
-                fetch(localIP + 'removebook', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({"bookid": book.id}),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Handle the response from your server (e.g., success message)
-                        if (data.success) {
-                            Message(data.message, "success")
-                            setTimeout(() => {
-                                resetBooksDisplay() 
-                                removeButton.prop("disabled", false);
-                            }, 1000);
-                           
-                        } else {
-                            Message(data.message, 'error')
-                            removeButton.prop("disabled", false);
-                        }
+            const removeButton = $("<button>")
+                .text("Remove")
+                .addClass("btn btn-danger")
+                .click(function () {
+                    removeButton.prop("disabled", true);
+                    fetch(localIP + 'removebook', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({"bookid": book.id}),
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        removeButton.prop("disabled", false);
-                    });
-            });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Message(data.message, "success")
+                                setTimeout(() => {
+                                    resetBooksDisplay() 
+                                    removeButton.prop("disabled", false);
+                                }, 1000);
+                            } else {
+                                Message(data.message, 'error')
+                                removeButton.prop("disabled", false);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            removeButton.prop("disabled", false);
+                        });
+                });
+        
             const editButton = $("<button>");
-            const editInput = $("<input placeholder = 'how many copies' type = 'number'>")
-            editButton.text("Edit");
-            editButton.addClass("btn btn-primary");
+            const editInput = $("<input placeholder='how many copies' type='number'>");
+            editButton.text("Edit").addClass("btn btn-primary");
             
             editButton.click(function () {
                 const inputValue = editInput.val();
@@ -152,14 +136,12 @@ function displayBooks(books, query) {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // Handle the response from your server (e.g., success message)
                         if (data.success) {
                             Message(data.message, "success")
                             setTimeout(() => {
                                 resetBooksDisplay() 
                                 editButton.prop("disabled", false);
                             }, 1000);
-                           
                         } else {
                             Message(data.message, 'error')
                             editButton.prop("disabled", false);
@@ -170,14 +152,16 @@ function displayBooks(books, query) {
                         editButton.prop("disabled", false);
                     });
             });
-
-            cardBody.append(title, author, editButton);
-            cardBody.append(title, author, editInput);
-            cardBody.append(title, author, removeButton);
+        
+            cardBody.append(title, author, editButton, editInput, removeButton);
             cardContent.append(image, cardBody);
             card.append(cardContent);
-            bookList.append(card);
+            
+            return card;
         });
+        
+        bookList.html(bookCards);
+        
     }
 }
 

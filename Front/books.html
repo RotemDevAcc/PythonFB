@@ -40,7 +40,7 @@
     $(function () {
         $("#navbar-placeholder").load("navbar.html");
 
-        if(!userName || userName == ""){
+        if (!userName || userName == "") {
             var booksList = $("#books-list");
             booksList.append("<h3>You Must Login Before You can view the books section</h3>");
             return
@@ -61,7 +61,7 @@
         if (books.length === 0) {
             booksList.append("<p>No books available.</p>");
         } else {
-            books.forEach(function (book, index) {
+            var bookCards = books.map(function (book, index) {
                 var bookCard = $('<div class="book-card"></div>');
                 var img = $('<img src="images/' + book.image + '" alt="' + book.name + '">');
                 var title = $("<h3>" + book.name + "</h3>");
@@ -80,7 +80,7 @@
                 var oneMonthRadioContainer = $('<div class="radio-option"></div>');
                 var oneMonthRadio = $('<label class="btn btn-secondary"><input type="radio" name="borrowOption_' + index + '" value="month">1 Month</label>');
                 oneMonthRadioContainer.append(oneMonthRadio);
-                
+
                 radioContainer.append(oneDayRadioContainer);
                 radioContainer.append(oneWeekRadioContainer);
                 radioContainer.append(oneMonthRadioContainer);
@@ -95,28 +95,31 @@
                 bookCard.append(title);
                 bookCard.append(releaseDate);
                 bookCard.append(copies);
-                if(hasBook(book.id)){
-                    var borrowButton = null 
+                if (hasBook(book.id)) {
+                    var borrowButton = null;
                     borrowButton = $('<button class="btn btn-success">Return Book</button>');
                     borrowButton.click(function () {
-                        returnBook(book)
+                        returnBook(book);
                         //Message("You Already have this book, return it first.",'error')
                     });
                     bookCard.append(borrowButton);
-                }
-                else{
+                } else {
                     if (book.copies > 0) {
                         bookCard.append(radioContainer); // Add the radio buttons
                         bookCard.append(borrowButton);
                     }
                 }
 
-                booksList.append(bookCard);
+                return bookCard;
             });
+
+            // Append the book cards to your booksList element
+            booksList.append(bookCards);
+
         }
     }
 
-    function returnBook(book){
+    function returnBook(book) {
         fetch(localIP + 'books/returnbook', {
             method: 'POST',
             headers: {
@@ -140,7 +143,7 @@
 
 
                 } else {
-                    if(data.reloadbooks) ModifyBooks(data.reloadbooks)
+                    if (data.reloadbooks) ModifyBooks(data.reloadbooks)
                     Message(data.message, 'error')
                 }
             })
