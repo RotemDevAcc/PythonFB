@@ -121,7 +121,7 @@ function displayBooks(books, query) {
         
             const editButton = $("<button>");
             const editInput = $("<input placeholder='how many copies' type='number'>");
-            editButton.text("Edit").addClass("btn btn-primary");
+            editButton.text("Edit Copies").addClass("btn btn-primary");
             
             editButton.click(function () {
                 const inputValue = editInput.val();
