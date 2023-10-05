@@ -24,7 +24,7 @@ document.getElementById('add-book-form').addEventListener('submit', function (e)
     formData.append('image', imageInput.files[0]); // Add the image file
 
     // Send the new book data to your Flask server using fetch with the PUT method
-    fetch(localIP + '/addbook', {
+    fetch(localIP + '/books/managebook', {
         method: 'PUT',
         body: formData, // Use the FormData object
     })
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function resetBooksDisplay(){
     // Request All Books From the server
-    $.get(localIP+ "books", function (books) {
+    $.get(localIP+ "/books", function (books) {
         booksData = books;
         displayBooks(booksData, ""); // Display all books initially
     });
@@ -93,7 +93,7 @@ function displayBooks(books, query) {
                 .addClass("btn btn-danger")
                 .click(function () {
                     removeButton.prop("disabled", true);
-                    fetch(localIP + 'removebook', {
+                    fetch(localIP + '/books/managebook', {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ function displayBooks(books, query) {
                 const inputValue = editInput.val();
                 if(!inputValue) return Message("Amount Of Copies Not Chosen",'error')
                 editButton.prop("disabled", true);
-                fetch(localIP + 'modifybook', {
+                fetch(localIP + '/books/managebook', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

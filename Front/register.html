@@ -58,7 +58,7 @@
                 return Message("Passwords are not equal", 'error')
             }
 
-            fetch(localIP + 'accounts', {
+            fetch(localIP + 'usersapi/accounts', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -46,7 +46,7 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            fetch(localIP + 'accounts', {
+            fetch(localIP + 'usersapi/accounts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

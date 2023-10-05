@@ -1,7 +1,7 @@
 
 import logging
 
-# Imports That Are Sent To app.py
+# Imports That Are Sent To __init__.py
 from flask import Flask,request,jsonify
 from flask_cors import CORS
 
@@ -10,7 +10,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text # A
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash, check_password_hash
-import os # Used in App.py
+import os # Used in __init__.py
 
 USELOGGING = False # Keep this as False if you are using HTML Live Server
 
