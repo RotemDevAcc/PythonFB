@@ -17,7 +17,7 @@ def getusers():
         users = session.query(User).all()
 
         # Create a list of users to send in the response
-        sendusers = [{"userid": user.id, "username": user.username, "books": json.loads(user.books), "isadmin": user.isAdmin} for user in users]
+        sendusers = [{"userid": user.id, "username": user.username, "books": json.loads(user.books), "isadmin": user.isAdmin, "date":user.date, "gender":user.gender} for user in users]
 
         return jsonify({"success": True, "data": sendusers})
     except Exception as e:
@@ -105,10 +105,18 @@ def register():
     data = request.get_json()
     uname = data.get('username')
     password = data.get("password")
+    date = data.get("date")
+    gender = data.get("gender")
     
     if not uname or not password:
         return jsonify({"success": False, "message": "Username or Password not Mentioned"})
     
+    if not date:
+        return jsonify({"success": False, "message": "Date Not Mentioned"})
+    
+    if not gender:
+        return jsonify({"success": False, "message": "Gender Not Mentioned"}) 
+
     # Check if the username already exists in the database
     session = Session()
     try:
@@ -122,7 +130,7 @@ def register():
         hashed_password = generate_password_hash(password, method='sha256')
         
         # Create a new user object and add it to the database
-        new_user = User(username=uname, password=hashed_password, books = json.dumps([]), isAdmin=False)
+        new_user = User(username=uname, password=hashed_password, date=date, gender=gender, books = json.dumps([]), isAdmin=False)
         
         session.add(new_user)
         session.commit()

@@ -40,8 +40,14 @@
                     let passed = 0
                     users.forEach(user => {
                         const listItem = document.createElement('li');
-                        listItem.textContent = `Username: ${user.username}, ${user.isadmin == true ? "Admin: Yes" : "Admin: No"}`;
-                        listItem.classList.add('list-group-item'); // Add Bootstrap list-group-item class
+
+
+                        const userText = `Username: ${user.username}, ${user.isadmin ? 'Admin: Yes' : 'Admin: No'}`;
+
+                        listItem.textContent = userText;
+                        listItem.classList.add('list-group-item');
+
+
 
                         const button = document.createElement('button');
                         button.textContent = "Delete";
@@ -63,8 +69,16 @@
                             button2.disabled = true;
                         }
 
+                        const dobParagraph = document.createElement('p');
+                        dobParagraph.textContent = `DOB: ${user.date}`;
+
+                        const genderParagraph = document.createElement('p');
+                        genderParagraph.textContent = `Gender: ${user.gender}`;
+                        listItem.appendChild(dobParagraph);
+                        listItem.appendChild(genderParagraph);
                         listItem.appendChild(button);
                         listItem.appendChild(button2);
+
 
                         // Create a div for books and title
                         const booksDiv = document.createElement('div');

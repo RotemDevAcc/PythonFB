@@ -7,6 +7,8 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)
+    password = Column(String(50), nullable=False)
+    date = Column(String(50), nullable=False)
+    gender = Column(String(15), nullable=False)
     books = Column(Text)
     isAdmin = Column(Boolean, default=False)

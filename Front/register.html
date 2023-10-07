@@ -26,6 +26,19 @@
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
+            <div class="form-group">
+                <label for="register_date">Date Of Birth</label>
+                <input type="date" class="form-control" id="register_date" name="register_date" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary btn-block">Register</button>
             <p class="mt-3 text-center">Already have an account? <a href="login.html">Login</a></p>
         </form>
@@ -53,7 +66,8 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const confirm_password = document.getElementById('confirm_password').value;
-
+            const gender = document.getElementById('gender').value
+            const date = document.getElementById('register_date').value
             if (password != confirm_password) {
                 return Message("Passwords are not equal", 'error')
             }
@@ -63,7 +77,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password, date, gender }),
             })
                 .then(response => response.json())
                 .then(data => {

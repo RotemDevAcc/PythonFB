@@ -88,7 +88,7 @@ def init_default_books():
         # If there are no users in the database, add the default user
         if not users_in_db:
             hashed_password = generate_password_hash("admin", method='sha256')
-            user = User(username="admin", password=hashed_password, books = json.dumps([]), isAdmin=True)
+            user = User(username="admin", password=hashed_password,date="01/01/1910",gender="other", books = json.dumps([]), isAdmin=True)
             session.add(user)
             session.commit()
     except Exception as e:
