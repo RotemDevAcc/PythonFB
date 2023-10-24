@@ -1,7 +1,15 @@
 let userName = null
 let isAdmin = false;
 let userBooks = null;
-const localIP = `${window.location.protocol}//${window.location.hostname}:911/`;
+
+
+
+const localIP = `${window.location.protocol}//${window.location.hostname}:911/`; // Read Your Local IP Automaticlly 
+const ManualIP = false; // Insert IP Manually
+if (ManualIP){
+    localIP = "http://127.0.0.1:911/" // Change This To Whatever You Want
+}
+
 function UserLoggedin(user){
     if (!user) return
     var userData = {
@@ -15,6 +23,7 @@ function UserLoggedin(user){
     userBooks = user.books ? user.books : null
     localStorage.setItem("saveduser",JSON.stringify(userData))
 }
+
 
 
 function Message(message, type){
