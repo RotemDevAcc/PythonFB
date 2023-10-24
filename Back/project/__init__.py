@@ -21,7 +21,7 @@ Session = sessionmaker(bind=engine)
 # App Modifications
 app = Flask(__name__)
 CORS(app)
-app.config['SECRET_KEY'] = "SECRKAIEPREVKFIED"
+app.config['SECRET_KEY'] = "CHANGEME"
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2 MB limit
 # End App Modifications
 UPLOAD_FOLDER = 'uploads'
