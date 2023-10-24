@@ -7,9 +7,11 @@ let userBooks = null;
 const localIP = `${window.location.protocol}//${window.location.hostname}:911/`; // Read Your Local IP Automaticlly 
 const ManualIP = false; // Insert IP Manually
 if (ManualIP){
-    localIP = "http://127.0.0.1:911/" // Change This To Whatever You Want
+    localIP = "http://127.0.0.1:911/" // Change This To Whatever You Want Default: http://127.0.0.1:911/
 }
 
+
+// User Logged in, Load His Details and save to localstorage
 function UserLoggedin(user){
     if (!user) return
     var userData = {
@@ -26,11 +28,16 @@ function UserLoggedin(user){
 
 
 
+
 function Message(message, type){
+
+    // Play A Notification Sound
     var audio = document.getElementById("notificationSound");
     if (audio) {
         audio.play();
     }
+
+    // If type not selected play a default color
     if(!type){
         type = "linear-gradient(to right, #00b09b, #96c93d)"
     }else if (type == "error"){
@@ -54,14 +61,22 @@ function Message(message, type){
 
 let loggingout = false;
 
+// Log Out Proccess
 function logout(){
     if(loggingout) return
     loggingout = true
+
+    // Remove localStorage
     let saveduser = JSON.parse(localStorage.getItem("saveduser"));
     if(saveduser) localStorage.removeItem("saveduser")
     userName = null
-    isAdmin = false;
+    if (isAdmin){
+        isAdmin = false;  
+    }
+    
+    // Notify The Client we are logging him out
     Message("Logging Out",'info') 
+    // Delay by 1.5 seconds so he will have time to read the notification.
     setTimeout(() => {
         loggingout = false
         window.location.href = 'index.html';
@@ -70,6 +85,7 @@ function logout(){
 
 
 
+// Logs the client back automaticlly whenever he changes page or simply logs back on to the website
 function autologin(){
     let saveduser = JSON.parse(localStorage.getItem("saveduser"));
     if(saveduser){
@@ -79,6 +95,8 @@ function autologin(){
     }
 }
 
+
+// Syncronize the client's Books with the server's database
 function ModifyBooks(books){
     userBooks = books
 
